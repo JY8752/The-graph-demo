@@ -18,6 +18,7 @@ import {
   SuffixURISet,
   Transfer
 } from "../generated/schema"
+import { log, ipfs, json, JSONValue, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
 export function handleApproval(event: ApprovalEvent): void {
   let entity = new Approval(
@@ -89,6 +90,55 @@ export function handleTransfer(event: TransferEvent): void {
   )
   entity.from = event.params.from
   entity.to = event.params.to
-  entity.tokenId = event.params.tokenId
+  
+  const tokenId = event.params.tokenId
+  const metadata = getMetadata(tokenId)
+
+  entity.tokenId = tokenId
+
+  if(metadata) {
+    const value = json.fromBytes(metadata).toObject()
+
+    const description = value.get("description")
+    if(description) {
+      entity.description = description.toString()
+    }
+
+    const image = value.get("image")
+    if(image) {
+      entity.image = image.toString()
+    }
+
+    const attributes = value.get("attributes")
+    if(attributes) {
+      const attributeArray = attributes.toArray()
+      for(let i = 0; i < attributeArray.length; i++) {
+        const attr = attributeArray[i].toObject()
+        const traitType = attr.get("trait_type")
+        const value = attr.get("value")
+        if(traitType && value) {
+          if(traitType.toString() === "Name") {
+            entity.name = value.toString()
+          } else if(traitType.toString() === "Background") {
+            entity.background = value.toString()
+          } else if(traitType.toString() === "Outfit") {
+            entity.outfit = value.toString()
+          } else if(traitType.toString() === "Prop") {
+            entity.prop = value.toString()
+          } else if(traitType.toString() === "Hairstyle") {
+            entity.hairStyle = value.toString()
+          } else {
+            entity.expression = value.toString()
+          }
+        }
+      }
+    }
+  }
+
   entity.save()
+}
+
+function getMetadata(tokenId: BigInt): Bytes | null {
+  const url = `https://digidaigaku.com/metadata/${tokenId}.json`
+  return ipfs.cat(url)
 }
