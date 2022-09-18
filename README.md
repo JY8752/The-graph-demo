@@ -1,6 +1,7 @@
 # The-graph-demo
 The graphのデモ。
 [DigiDigaku](https://opensea.io/collection/digidaigaku)のサブグラフを作ってみる。
+ipfsからじゃないとmetadata取れない、DigiDigakuがipfsにない？のでmetadata取れない。
 
 ## install
 
