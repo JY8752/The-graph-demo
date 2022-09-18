@@ -1,0 +1,44 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: DigiDaigaku
+    network: mainnet
+    source:
+      address: "0xd1258DB6Ac08eB0e625B75b371C023dA478E94A9"
+      abi: DigiDaigaku
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Approval
+        - ApprovalForAll
+        - BaseURISet
+        - OwnershipTransferred
+        - RoyaltySet
+        - SignerSet
+        - SuffixURISet
+        - Transfer
+      abis:
+        - name: DigiDaigaku
+          file: ./abis/DigiDaigaku.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BaseURISet(string)
+          handler: handleBaseURISet
+        - event: OwnershipTransferred(indexed address,indexed address)
+          handler: handleOwnershipTransferred
+        - event: RoyaltySet(address,uint96)
+          handler: handleRoyaltySet
+        - event: SignerSet(address)
+          handler: handleSignerSet
+        - event: SuffixURISet(string)
+          handler: handleSuffixURISet
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/digi-daigaku.ts

@@ -1,0 +1,47 @@
+type Approval @entity {
+  id: ID!
+  owner: Bytes! # address
+  approved: Bytes! # address
+  tokenId: BigInt! # uint256
+}
+
+type ApprovalForAll @entity {
+  id: ID!
+  owner: Bytes! # address
+  operator: Bytes! # address
+  approved: Boolean! # bool
+}
+
+type BaseURISet @entity {
+  id: ID!
+  _baseTokenURI: String! # string
+}
+
+type OwnershipTransferred @entity {
+  id: ID!
+  previousOwner: Bytes! # address
+  newOwner: Bytes! # address
+}
+
+type RoyaltySet @entity {
+  id: ID!
+  _receiver: Bytes! # address
+  _feeNumerator: BigInt! # uint96
+}
+
+type SignerSet @entity {
+  id: ID!
+  _signer: Bytes! # address
+}
+
+type SuffixURISet @entity {
+  id: ID!
+  _suffixURI: String! # string
+}
+
+type Transfer @entity {
+  id: ID!
+  from: Bytes! # address
+  to: Bytes! # address
+  tokenId: BigInt! # uint256
+}
